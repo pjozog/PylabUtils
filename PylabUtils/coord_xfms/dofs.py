@@ -1,0 +1,6 @@
+X = 0
+Y = 1
+Z = 2
+ROLL = 3
+PITCH = 4
+HEADING = 5

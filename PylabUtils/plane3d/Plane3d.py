@@ -22,4 +22,4 @@ class Plane3d (object):
         return ops.ominus (self, pose)
 
     def __repr__ (self):
-        return 'x=%1.2f y=%1.2f z=%1.2f a=%1.2f e=%1.2f d=%1.2f' % (self.x, self.y, self.z, self.azim, self.elev, self.d)
+        return 'X: %1.6f\nY: %1.6f\nZ: %1.6f\nA: %1.6f\nE: %1.6f\nD: %1.6f\n' % (self.x, self.y, self.z, self.azim, self.elev, self.d)

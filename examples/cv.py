@@ -34,7 +34,11 @@ if __name__ == '__main__':
     cam = plu.cv.Camera (x_wc, K)
     raytr = plu.cv.RayTracer (cam)
 
-    uv = array ([453., 123.])
+    # uv = array ([453., 123.])
+    uv1 = array ([453., 123.])
+    uv2 = array ([872., 631.])
+    uv = column_stack ((uv1, uv2))
+
     lam = 1.
     Xtrace = raytr.trace (uv, lam)
     print 

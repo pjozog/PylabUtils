@@ -1,0 +1,2 @@
+from gaussianProcess import GaussianProcessRegressionDense, GaussianProcessRegressionSparse
+import kernels

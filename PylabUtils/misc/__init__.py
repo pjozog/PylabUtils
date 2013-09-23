@@ -6,3 +6,5 @@
 
 from normCols import normCols
 from normRows import normRows
+from timing import Timer, tic, toc
+from expecting import expecting

@@ -1,7 +1,11 @@
 from pylab import *
 
 def matrix2xyzrph (M):
+    """
 
+    Return the 6-dof pose from a 4x4 transformation matrix M
+    
+    """
     tx = M[0,3]
     ty = M[1,3]
     tz = M[2,3]

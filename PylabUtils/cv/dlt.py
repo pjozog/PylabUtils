@@ -3,8 +3,11 @@
 import pylab as pl
 
 def homog2D (xPrime, x):
-    """Compute the 3x3 homography matrix mapping a set of N 2D homogeneous points (3xN) to
-    another set (3xN)
+    """
+    
+    Compute the 3x3 homography matrix mapping a set of N 2D homogeneous 
+    points (3xN) to another set (3xN)
+
     """
 
     numPoints = xPrime.shape[1]

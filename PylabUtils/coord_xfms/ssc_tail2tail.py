@@ -8,9 +8,20 @@ from ssc_inverse import ssc_inverse
 from .. import diff
 
 def ssc_tail2tail (x_gi, x_gj):
+    """
+
+    Given 6-DOF poses x_gi and x_gj, return x_ij
+    
+    """
+
     return ssc_head2tail (ssc_inverse (x_gi), x_gj)
 
 def ssc_tail2tail_jacob (x_gi, x_gj):
+    """
+
+    Return the Jacobian of ssc_tail2tail
+    
+    """
     x = concatenate ((x_gi, x_gj))
     return diff.numerical_jacobian (_f, x)
 

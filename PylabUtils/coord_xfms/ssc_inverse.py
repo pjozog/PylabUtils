@@ -8,6 +8,11 @@ from matrix2xyzrph import matrix2xyzrph
 from .. import diff
 
 def ssc_inverse (x_ij):
+    """
+
+    Given the 6-DOF pose x_ij, return x_ji
+    
+    """
 
     Hij = xyzrph2matrix (x_ij)
     Rji = Hij[0:3, 0:3]
@@ -21,4 +26,9 @@ def ssc_inverse (x_ij):
     return matrix2xyzrph (Hji)
 
 def ssc_inverse_jacob (x_ij):
+    """
+
+    Return the Jacobian of ssc_inverse
+    
+    """
     return diff.numerical_jacobian (ssc_inverse, x_ij)

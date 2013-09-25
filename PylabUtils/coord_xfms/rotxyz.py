@@ -3,6 +3,11 @@
 from pylab import *
 
 def rotxyz (r, p, h):
+    """
+
+    Compute the 3x3 rotation matrix R from roll, pitch, and heading Euler angles
+
+    """
 
     cr = cos(r); sr = sin(r);
     cp = cos(p); sp = sin(p);

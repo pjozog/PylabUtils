@@ -8,6 +8,11 @@ from matrix2xyzrph import matrix2xyzrph
 from .. import diff
 
 def ssc_head2tail (x_ij, x_jk):
+    """
+    
+    Given 6-DOF pose arrays x_ij and x_jk, return x_ik
+
+    """
     Hij = xyzrph2matrix (x_ij)
     Hjk = xyzrph2matrix (x_jk)
     Hik = Hij.dot (Hjk)
@@ -15,6 +20,11 @@ def ssc_head2tail (x_ij, x_jk):
     return x_ik
 
 def ssc_head2tail_jacob (x_ij, x_jk):
+    """
+    
+    Returns the Jacobian of ssc_head2tail
+
+    """
     x = concatenate ((x_ij, x_jk))
     return diff.numerical_jacobian (_f, x)
 

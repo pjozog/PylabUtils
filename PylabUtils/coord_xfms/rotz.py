@@ -3,6 +3,11 @@
 from pylab import *
 
 def rotz (h):
+    """
+
+    Comput the 3x3 rotation matrix from the heading angle, h
+    
+    """
 
     c = cos (h)
     s = sin (h)

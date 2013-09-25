@@ -3,6 +3,11 @@
 from pylab import *
 
 def roty (p):
+    """
+
+    Comput the 3x3 rotation matrix from the pitch angle, p
+    
+    """
 
     c = cos (p)
     s = sin (p)

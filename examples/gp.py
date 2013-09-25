@@ -8,7 +8,10 @@
 # --------------------------------------------------------------------------------
 
 from pylab import *
+from mpl_toolkits.mplot3d import Axes3D
+import scipy.interpolate
 import PylabUtils as plu
+import numpy
 
 # collect data via mouse-clicks
 def getTrainingData ():
@@ -55,7 +58,6 @@ def getTrainingData ():
 
     t = concatenate (([1], zeros (NOBS,), -1*ones (exterior.shape[1],)))
     xs = column_stack ((interior, row_stack ((x, y)), exterior))
-
     return (xs, t)
 
 x, t = getTrainingData ()
@@ -88,10 +90,29 @@ plu.misc.toc ()
 # Plot the regression, surface is curve where tTest == 0
 imshow (tTest, origin='lower', 
         extent=[min (x[0,:]), max (x[0,:]), min (x[1,:]), max (x[1,:])], 
-        cmap=cm.hot,
+        cmap=cm.jet,
         interpolation='bilinear')
 draw ()
 colorbar ()
 draw ()
+
+# plot surface using lots of interpolation and black pixels
+interpolator = scipy.interpolate.RectBivariateSpline (xCoords, yCoords, tTest)
+xCoordsInterp = linspace (min (x[0,:]), max (x[0,:]), 50*N)
+yCoordsInterp = linspace (min (x[1,:]), max (x[1,:]), 50*N)
+tTestInterp = interpolator (xCoordsInterp, yCoordsInterp)
+grad1, grad2 = gradient (sign (tTestInterp))
+edge = abs (grad1) + abs (grad2)
+rowInds, colInds = plu.misc.find2 (edge != 0)
+plot (xCoordsInterp[colInds], yCoordsInterp[rowInds], 'k,')
+draw ()
+
+fig = figure ()
+ax = fig.add_subplot (111, projection='3d')
+ax.plot_surface (xxCoords, yyCoords, tTest, rstride=1, cstride=1, cmap=cm.jet)
+draw ()
+hold ('on')
+z = zeros (tTest.shape)
+ax.plot_wireframe (xxCoords, yyCoords, z)
 
 show ()

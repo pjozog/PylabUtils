@@ -3,6 +3,11 @@
 from pylab import *
 
 def rotx (r):
+    """
+
+    Comput the 3x3 rotation matrix from the roll angle, r
+    
+    """
 
     c = cos (r)
     s = sin (r)

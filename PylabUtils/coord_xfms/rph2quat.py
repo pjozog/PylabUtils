@@ -4,6 +4,12 @@ from pylab import *
 import dofs
 
 def rph2quat (rph):
+    """
+
+    Return the quaternion as a length-4 array from the
+    length-3 array of Euler angles (roll-pitch-heading)
+
+    """
     quat = zeros ((4,))
     roll, pitch, yaw = (rph[0], rph[1], rph[2])
 

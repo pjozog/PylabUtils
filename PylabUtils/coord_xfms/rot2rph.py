@@ -3,6 +3,11 @@
 from pylab import array, arctan2, cos, sin
 
 def rot2rph (R):
+    """
+
+    Decompose a 3x3 rotation matrix R into roll, pitch, and yaw angles
+    
+    """
 
     h = arctan2 (R[1,0], R[0,0])
 

@@ -7,6 +7,10 @@ def gaussProcess (x1, x2, theta):
     diff = x1 - x2
     return theta[0]*exp (-theta[1]/2 * (diff.dot (diff))) + theta[2] + theta[3]*x1.dot (x2)
 
+def sqExp (x1, x2, theta):
+    sigma = theta
+    return exp(-1./(2*sigma**2) * numpy.linalg.norm(x1 - x2)**2)
+
 def thinPlate2D (x1, x2, R):
     r = numpy.linalg.norm (x1 - x2)
     if r == 0:

@@ -2,27 +2,36 @@
 
 import regression
 
-from pylab import zeros, solve, diag, eye
+from pylab import zeros, solve, diag, eye, sqrt
 
 class GaussianProcessRegression (regression.Regression):
     def __init__ (self, kernel, theta, trainNoise, trainData, trainLabels):
         self._kernel = kernel
         self._theta = theta
+        assert (len (trainLabels.shape) == 1)
         self.trainLabels = trainLabels.copy ()
         self.trainData = trainData.copy ()
         self.trainNoise = trainNoise
 
-    def predictAt (self, X):
+    def predictAt (self, X, **kwargs):
         numTestLabels = X.shape[1]
         numTrainlabels = self.trainData.shape[1]
         t = zeros (numTestLabels)
+        bias = kwargs.get ('bias', 0)
         for i in range (numTestLabels):
             k = self._k (X[:,i])
-            t[i] = k.dot (solve (self.K, self.trainLabels))
+            t[i] = k.dot (solve (self.K, self.trainLabels - bias)) + bias
         return t
 
-    def covAt (self, x, k=None):
-        raise NotImplementedError ("GP covariance prediction not yet implemented")
+    def sigmaAt (self, X, noises):
+        numTestLabels = X.shape[1]
+        numTrainlabels = self.trainData.shape[1]
+        sigmas = zeros (numTestLabels)
+        for i in range (numTestLabels):
+            c = self._kernel (X[:,i], X[:,i], self._theta) + noises[i]
+            k = self._k (X[:,i])
+            sigmas[i] = c - k.dot (solve (self.K, k))
+        return sqrt (sigmas)
 
     def train (self):
         self.K = self._K () + diag (self.trainNoise)

@@ -32,3 +32,6 @@ def homog2D (xPrime, x):
     h = V[:,-1]
     H = pl.reshape (h, (3, 3))
     return H
+
+def triangulate (points2d, cameras):
+    pass

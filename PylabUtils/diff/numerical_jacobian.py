@@ -19,13 +19,9 @@ def numerical_jacobian (fhandle, x, **args):
     """
     
     y = fhandle (x, **args)
-    
     numRows, numCols = (len (y), len (x))
-    
-    if len (y.shape) == 1:
-        numRows = 1
-
     J = zeros ((numRows, numCols))
+
     for col in range (0, numCols):
         xPrime = x.copy ()
         deltaX = max (1e-4*x[col], 1e-6)

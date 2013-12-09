@@ -32,7 +32,6 @@ if __name__ == '__main__':
                 [0, fy, cy, 0. ],
                 [0, 0, 1., 0.]])
     cam = plu.cv.Camera (x_wc, K)
-    raytr = plu.cv.RayTracer (cam)
 
     # uv = array ([453., 123.])
     uv1 = array ([453., 123.])
@@ -40,13 +39,13 @@ if __name__ == '__main__':
     uv = column_stack ((uv1, uv2))
 
     lam = 1.
-    Xtrace = raytr.trace (uv, lam)
+    Xtrace = cam.raytrace (uv, lam)
     print 
     print 'Camera pose in world frame:'
     print x_wc
     print 'Observed point in image plane:'
     print uv
-    print 'Back-projected 3D point in world frame (lambda=%f):' % lam
+    print 'Back-projected 3D point in camera frame (lambda=%f):' % lam
     print Xtrace
     print 'Corresponding forward-projected image point'
     print cam.project (Xtrace)

@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 import pylab as pl
+from skewsym import skewsym
+import homogeneous
+from .. import coord_xfms
 
 def homog2D (xPrime, x):
     """
@@ -34,4 +37,38 @@ def homog2D (xPrime, x):
     return H
 
 def triangulate (points2d, cameras):
-    pass
+    """
+
+   Compute the N-view triangulation of corresponding 2D image points, given calibrated camera poses
+
+    points2d: 2N-by-M matrix of 2D image points  (N: number of cameras, M: number of image points)
+    cameras: length-N list of Camera objects
+    
+    """
+
+    N = len (cameras)
+    M = points2d.shape[1]
+
+    pointsNorm = pl.zeros (points2d.shape)
+
+    for camInd, camera in enumerate (cameras):
+        points = points2d[camInd*2:(camInd*2)+2,:]
+        pointsNorm[camInd*2:(camInd*2)+2,:] = camera.normalize (points)
+
+    X = pl.zeros ((3,M))
+    for pointInd in range (M):
+        A = pl.zeros ((3*N,4))
+        AStartRow = 0
+        skewsyms = pl.zeros ((3,3,N))
+
+        for camInd, camera in enumerate (cameras):
+            skewsyms[:,:,camInd] = skewsym (homogeneous.homogenize (pointsNorm[camInd*2:(camInd*2)+2,pointInd]))
+            A[AStartRow:AStartRow+3, 0:4] = skewsyms[:,:,camInd].dot (camera.wHc[0:3,0:4])
+            AStartRow += 3
+
+        U, S, VT = pl.svd (A)
+        V = VT.T
+
+        X[:,pointInd] = homogeneous.dehomogenize (V[:,-1])
+        
+    return X

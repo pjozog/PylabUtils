@@ -8,3 +8,4 @@ from mvnrnd import mvnrnd
 from randcov import randcov
 from rhomatrix import rhomatrix
 from mvnpdf import mvnpdf, mvnlogpdf
+from mvnkld import mvnkld

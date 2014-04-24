@@ -36,10 +36,44 @@ def homog2D (xPrime, x):
     H = pl.reshape (h, (3, 3))
     return H
 
+def homog3D (points2d, points3d):
+    """
+    
+    Compute a matrix relating homogeneous 3D points (4xN) to homogeneous
+    2D points (3xN)
+
+    Not sure why anyone would do this.  Note that the returned transformation 
+    *NOT* an isometry.  But it's here... so deal with it.
+
+    """
+
+    numPoints = points2d.shape[1]
+    assert (numPoints >= 4)
+
+    A = None
+    for i in range (0, numPoints):
+        xiPrime = points2d[:,i]
+        xi = points3d[:,i]
+
+        Ai_row0 = pl.concatenate ((pl.zeros (4,), -xiPrime[2]*xi, xiPrime[1]*xi))
+        Ai_row1 = pl.concatenate ((xiPrime[2]*xi, pl.zeros (4,), -xiPrime[0]*xi))
+        Ai = pl.row_stack ((Ai_row0, Ai_row1))
+
+        if A is None:
+            A = Ai
+        else:
+            A = pl.vstack ((A, Ai))
+
+    U, S, V = pl.svd (A)
+    V = V.T
+    h = V[:,-1]
+    P = pl.reshape (h, (3, 4))
+    return P
+
 def triangulate (points2d, cameras):
     """
 
-   Compute the N-view triangulation of corresponding 2D image points, given calibrated camera poses
+    Compute the N-view triangulation of corresponding 2D image points, given calibrated camera poses
 
     points2d: 2N-by-M matrix of 2D image points  (N: number of cameras, M: number of image points)
     cameras: length-N list of Camera objects

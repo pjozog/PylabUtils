@@ -9,3 +9,4 @@ from randcov import randcov
 from rhomatrix import rhomatrix
 from mvnpdf import mvnpdf, mvnlogpdf
 from mvnkld import mvnkld
+from margcov import margcov

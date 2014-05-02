@@ -21,5 +21,11 @@ class Plane3d (object):
     def ominus (self, pose):
         return ops.ominus (self, pose)
 
+    def rot (self, otherPlane):
+        return ops.rot (self, otherPlane)
+
+    def asArray (self):
+        return array ([self.x, self.y, self.z])
+
     def __repr__ (self):
         return 'X: %1.6f\nY: %1.6f\nZ: %1.6f\nA: %1.6f\nE: %1.6f\nD: %1.6f\n' % (self.x, self.y, self.z, self.azim, self.elev, self.d)

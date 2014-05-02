@@ -4,11 +4,16 @@ from .. import coord_xfms
 
 import Plane3d
 
+def rot (plane1, plane2):
+    """ returns the rotation matrix that rotates plane1 to plane2"""
+    axis, angle = coord_xfms.axisang (plane1.asArray (), plane2.asArray ())
+    return coord_xfms.axisang2rot (axis, angle)
+
 def ominus (plane, pose):
     """ given a vehicle pose and plane (both in global frame), compute the plane in
     vehicle's frame """
 
-    planeXyz = array ([plane.x, plane.y, plane.z])
+    planeXyz = plane.asArray ()
     d = norm (planeXyz)
     planeXyzUnit = planeXyz / d
     R = coord_xfms.rotxyz (pose[coord_xfms.dofs.ROLL], pose[coord_xfms.dofs.PITCH], pose[coord_xfms.dofs.HEADING])

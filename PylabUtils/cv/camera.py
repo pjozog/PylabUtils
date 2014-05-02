@@ -17,7 +17,7 @@ class Camera:
         self.cHw = coord_xfms.xyzrph2matrix (self.x_wc)
 
         # the stupid [R t] notation that I absolutely hate
-        self.Rt = self.wHc
+        self.Rt = self.wHc[0:3,:]
         
         # projects points in world frame to image plane of camera
         self.P = K.dot (self.Rt)

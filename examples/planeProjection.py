@@ -6,7 +6,7 @@ import PylabUtils as plu
 
 # camera frame denoted as 'c'
 
-x_wc = rand (6,)
+x_wc = array ([0.1, -0.3, 2, 0.1, -0.1, 0.2])
 print 'Camera pose in world coordinates:'
 print x_wc
 print
@@ -30,12 +30,13 @@ print
 
 # rotate the plane so that it's the ground plane (0, 0, 1)
 pi_ground = plu.plane3d.Plane3d (0, 0, 1)
-R_grnd = pi_ck.rot (pi_ground)
+# rotates plane 'k' to ground plane
+R_k2grnd = pi_ck.rot (pi_ground)
 
 # we now want to back-project a point onto the artificial ground plane
 
 # rotate everything so that plane 'k' is the ground plane
-rph = plu.coord_xfms.rot2rph (R_grnd)
+rph = plu.coord_xfms.rot2rph (R_k2grnd.T)
 
 # get new rotated reference frame (where all points on the original plane are [x y 0])
 # "x_cnew" : "Transformation from camera frame to new frame"
@@ -60,6 +61,11 @@ H = plu.coord_xfms.xyzrph2matrix (x_wnew)
 X = plu.cv.dehomogenize (H.dot (plu.cv.homogenize (Xnew)))
 print '3D point in world coordinates: '
 print X
+print
+
+print '3D point in camera coordinates: '
+print plu.cv.dehomogenize (camnew.wHc.dot (plu.cv.homogenize (Xnew)))
+print
 
 uvPredicted = cam.project (X)
 print 'Predicted 2D point in image coordinates:'

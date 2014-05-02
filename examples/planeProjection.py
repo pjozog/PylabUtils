@@ -28,43 +28,14 @@ print "Plane normal in camera's frame:"
 print pi_ck
 print
 
-# rotate the plane so that it's the ground plane (0, 0, 1)
-pi_ground = plu.plane3d.Plane3d (0, 0, 1)
-# rotates plane 'k' to ground plane
-R_k2grnd = pi_ck.rot (pi_ground)
-
-# we now want to back-project a point onto the artificial ground plane
-
-# rotate everything so that plane 'k' is the ground plane
-rph = plu.coord_xfms.rot2rph (R_k2grnd.T)
-
-# get new rotated reference frame (where all points on the original plane are [x y 0])
-# "x_cnew" : "Transformation from camera frame to new frame"
-x_cnew = array ([-pi_ck.x, -pi_ck.y, -pi_ck.z, rph[0], rph[1], rph[2]])
-# "x_wnew" : "Transformation from world frame to new frame"
-x_wnew = plu.coord_xfms.ssc_head2tail (x_wc, x_cnew)
-# "x_newc" : "Transformation from new frame to camera frame"
-x_newc = plu.coord_xfms.ssc_inverse (x_cnew)
-camnew = plu.cv.Camera (x_newc, K)
-
-# we know if we back-projected the 2D pixel point to 3D space in this new reference frame,
-# it will have z coordinate of zero.  Therefore, discard the third column of camera
-# projection matrix P
-Preduced = camnew.P[:,[0, 1, 3]]
-
-# now we can recover the X Y (and Z, since it's zero) of the 3D point in rotated reference frame
-backproj = plu.cv.dehomogenize (inv (Preduced).dot (plu.cv.homogenize (uv)))
-Xnew = array ([backproj[0], backproj[1], 0])
-
-# transform back to original reference frame
-H = plu.coord_xfms.xyzrph2matrix (x_wnew)
-X = plu.cv.dehomogenize (H.dot (plu.cv.homogenize (Xnew)))
+X = cam.backprojectOnPlane (uv, pi_ck)
 print '3D point in world coordinates: '
 print X
 print
 
-print '3D point in camera coordinates: '
-print plu.cv.dehomogenize (camnew.wHc.dot (plu.cv.homogenize (Xnew)))
+Xcam = cam.transformPoints (X)
+print '3D point in camera coordinates:'
+print Xcam
 print
 
 uvPredicted = cam.project (X)

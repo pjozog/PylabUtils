@@ -1,2 +1,2 @@
-from gaussianProcess import GaussianProcessRegressionDense, GaussianProcessRegressionSparse
 import kernels
+from PylabUtils.ml.gaussianProcess import GaussianProcessRegressionDense, GaussianProcessRegressionSparse

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from pylab import *
+import numpy as np
 
 def homogenize (points):
     """
@@ -10,9 +10,9 @@ def homogenize (points):
     """
 
     if len (points.shape) == 1:
-        return hstack ([points, ones (1,)])
+        return np.hstack ([points, np.ones (1,)])
     else:
-        return row_stack ([points, ones (points.shape[1])])
+        return np.row_stack ([points, np.ones (points.shape[1])])
 
 def dehomogenize (points):
     """
@@ -20,12 +20,12 @@ def dehomogenize (points):
     Convert to dehomogenious vectors, copying data
     
     """
-    pointsCp = copy (points)
+    pointsCp = np.copy (points)
     if len (points.shape) == 1:
         pointsCp = pointsCp / pointsCp[-1]
         return pointsCp[0:-1]
     else:
         for row in range (0, points.shape[0]):
             pointsCp[row,:] = pointsCp[row,:] / pointsCp[-1,:]
-        pointsCp = delete (pointsCp, -1, 0)
+        pointsCp = np.delete (pointsCp, -1, 0)
         return pointsCp

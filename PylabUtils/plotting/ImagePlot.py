@@ -2,9 +2,14 @@ from pylab import *
 
 ARRANGEMENT = 111
 
-# Shows the z value when you hover over with mouse, and prints the (x,y,z) value on mouse click
 class ImagePlot (object):
-    
+
+    """
+
+    Shows the z value when you hover over with mouse, and prints the (x,y,z) value on mouse click
+
+    """
+
     def __init__ (self, data):
         self.data = data
         self.numrows, self.numcols = self.data.shape

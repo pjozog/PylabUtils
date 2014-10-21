@@ -1,7 +1,6 @@
-#!/usr/bin/env python
-
-from pylab import *
 import dofs
+
+import numpy
 
 def rph2quat (rph):
     """
@@ -10,20 +9,20 @@ def rph2quat (rph):
     length-3 array of Euler angles (roll-pitch-heading)
 
     """
-    quat = zeros ((4,))
+    quat = numpy.zeros ((4,))
     roll, pitch, yaw = (rph[0], rph[1], rph[2])
 
     halfroll = roll / 2;
     halfpitch = pitch / 2;
     halfyaw = yaw / 2;
 
-    sin_r2 = sin (halfroll);
-    sin_p2 = sin (halfpitch);
-    sin_y2 = sin (halfyaw);
+    sin_r2 = numpy.sin (halfroll);
+    sin_p2 = numpy.sin (halfpitch);
+    sin_y2 = numpy.sin (halfyaw);
 
-    cos_r2 = cos (halfroll);
-    cos_p2 = cos (halfpitch);
-    cos_y2 = cos (halfyaw);
+    cos_r2 = numpy.cos (halfroll);
+    cos_p2 = numpy.cos (halfpitch);
+    cos_y2 = numpy.cos (halfyaw);
 
     quat[0] = cos_r2 * cos_p2 * cos_y2 + sin_r2 * sin_p2 * sin_y2;
     quat[1] = sin_r2 * cos_p2 * cos_y2 - cos_r2 * sin_p2 * sin_y2;

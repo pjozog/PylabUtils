@@ -1,5 +1,3 @@
-from pylab import *
-
 RED_COEFF = .2989
 GREEN_COEFF = .5870
 BLUE_COEFF = .1140

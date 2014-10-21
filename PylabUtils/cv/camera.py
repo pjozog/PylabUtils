@@ -7,7 +7,7 @@ class Camera:
     
     def __init__ (self, x_wc, K):
         self.x_wc = x_wc
-        self.x_cw = coord_xfms.ssc_inverse (self.x_wc)
+        self.x_cw = coord_xfms.ssc.inverse (self.x_wc)
 
         # camera calibration matrix
         self.K = K
@@ -64,9 +64,9 @@ class Camera:
         # "x_cnew" : "Transformation from camera frame to new frame"
         x_cnew = pl.array ([-plane.x, -plane.y, -plane.z, rph[0], rph[1], rph[2]])
         # "x_wnew" : "Transformation from world frame to new frame"
-        x_wnew = coord_xfms.ssc_head2tail (self.x_wc, x_cnew)
+        x_wnew = coord_xfms.ssc.head2tail (self.x_wc, x_cnew)
         # "x_newc" : "Transformation from new frame to camera frame"
-        x_newc = coord_xfms.ssc_inverse (x_cnew)
+        x_newc = coord_xfms.ssc.inverse (x_cnew)
 
         # camera in shifted reference frame
         camnew = Camera (x_newc, self.K)

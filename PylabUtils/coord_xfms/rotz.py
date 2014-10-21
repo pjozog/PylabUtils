@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-from pylab import *
+import numpy
 
 def rotz (h):
     """
@@ -9,13 +9,13 @@ def rotz (h):
     
     """
 
-    c = cos (h)
-    s = sin (h)
+    c = numpy.cos (h)
+    s = numpy.sin (h)
 
-    I = ones (c.shape)
-    O = zeros (c.shape)
+    I = numpy.ones (c.shape)
+    O = numpy.zeros (c.shape)
 
-    C_x_h = array ([[c,   s,  O],
-                    [-s,   c,  O],
-                    [O,  O,  I]])
+    C_x_h = numpy.array ([[c,   s,  O],
+                          [-s,   c,  O],
+                          [O,  O,  I]])
     return C_x_h

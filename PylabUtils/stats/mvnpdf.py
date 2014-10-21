@@ -2,6 +2,11 @@ from pylab import *
 import math
 
 def mvnpdf (x, mu, Sigma):
+    """
+
+    Evaluates the multi-variate Guassian pdf for the given mean (mu) and covariance (Sigma).
+    
+    """
     if not shape (x):
         normTerm = 1./sqrt (2*pi*Sigma)
         d = (x-mu)**2 * (1/Sigma)
@@ -11,6 +16,11 @@ def mvnpdf (x, mu, Sigma):
     return normTerm * exp (-0.5 * d)
 
 def mvnlogpdf (x, mu, Sigma):
+    """
+
+    Evaluates the log multi-variate Guassian pdf for the given mean (mu) and covariance (Sigma).  Useful if Sigma is large.
+    
+    """
     if not shape (x):
         return log (mvnpdf (x, mu, Sigma))
     else:

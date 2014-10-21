@@ -1,1 +1,1 @@
-from numerical_jacobian import numerical_jacobian
+from PylabUtils.diff.numerical_jacobian import numerical_jacobian

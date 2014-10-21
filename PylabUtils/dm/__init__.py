@@ -1,2 +1,2 @@
-from dm2trans import dm2trans
-from trans2dm import trans2dm
+from PylabUtils.dm.dm2trans import dm2trans
+from PylabUtils.dm.trans2dm import trans2dm

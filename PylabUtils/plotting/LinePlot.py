@@ -2,9 +2,13 @@ from pylab import *
 
 ARRANGEMENT = 111
 
-# Shows the z value when you hover over with mouse, and prints the (x,y,z) value on mouse click
+
 class LinePlot (object):
+    """
+
+    Shows the z value when you hover over with mouse, and prints the (x,y,z) value on mouse click
     
+    """
     def __init__ (self, xData, yData):
         self.xData = xData
         self.yData = yData

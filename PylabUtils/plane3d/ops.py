@@ -26,5 +26,5 @@ def oplus (plane, pose):
     """ given a global vehicle pose and local plane measurement in that vehicle's frame,
     predict the plane the global frame """
 
-    poseInv = coord_xfms.ssc_inverse (pose)
+    poseInv = coord_xfms.ssc.inverse (pose)
     return ominus (plane, poseInv)

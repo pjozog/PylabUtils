@@ -1,1 +1,1 @@
-from readSparseSystem import readSparseSystem
+from PylabUtils.isam_utils.readSparseSystem import readSparseSystem

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
 
-from haversine import haversine
-from rotecef import rotecef
-from xytToEcef import xytToEcef
+from PylabUtils.spherical_coords.haversine import haversine
+from PylabUtils.spherical_coords.rotecef import rotecef
+from PylabUtils.spherical_coords.xytToEcef import xytToEcef

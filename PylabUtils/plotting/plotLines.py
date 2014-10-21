@@ -3,7 +3,9 @@
 from pylab import *
 
 def plotLines (xpairs, ypairs, format, **args):
-
+    """
+    Plot a bunch of line segments
+    """
     xlist = []
     ylist = []
     for xends,yends in zip(xpairs,ypairs):

@@ -4,11 +4,37 @@ from mpl_toolkits.mplot3d import Axes3D
 from .. import coord_xfms
 
 def plot_coordinate_frame_from_pose (x_gi, **kwargs):
+    """
+
+    Plots a coordinate frame given length-6 pose vector
+
+    Example:
+    x_gi = array([1,2,3,4,5,6])
+    plot_coordinate_frame_from_pose (x_gi)
+    
+    """
     R = coord_xfms.rotxyz (x_gi[coord_xfms.dofs.ROLL], x_gi[coord_xfms.dofs.PITCH], x_gi[coord_xfms.dofs.HEADING])
     t = x_gi[0:3]
     plot_coordinate_frame (R, t, **kwargs)
 
 def plot_coordinate_frame (R, t, **kwargs):
+    """
+
+    Plots a coordinate frame given rotation matrix and tranlsation vector
+    R: rotation matrix
+    t: translation vector
+
+    Example:
+    x_gi = array([1,2,3,4,5,6])
+    plot_coordinate_frame_from_pose (x_gi)
+    
+    Options:
+    'scale'
+    'axis'
+    'label'
+
+    """
+
     if 'scale' not in kwargs:
         scale = 1.
     else:

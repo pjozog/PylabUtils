@@ -10,9 +10,9 @@ x_w1 = zeros (6,)
 x_w2 = .1 * rand (6,)
 x_w3 = .1 * rand (6,)
 
-K = array ([[fx, 0, cx, 0. ],
-            [0, fy, cy, 0. ],
-            [0, 0, 1., 0.]])
+K = array ([[fx, 0, cx],
+            [0, fy, cy],
+            [0, 0, 1.]])
 cam1 = plu.cv.Camera (x_w1, K)
 cam2 = plu.cv.Camera (x_w2, K)
 cam3 = plu.cv.Camera (x_w3, K)

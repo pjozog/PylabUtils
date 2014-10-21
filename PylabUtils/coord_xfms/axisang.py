@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from pylab import np
+import numpy as np
 
 def axisang (n1, n2):
     """ Returns the axis/angle rotation (in radians) that rotates norms n1 to n2."""

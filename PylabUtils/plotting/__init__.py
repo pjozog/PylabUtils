@@ -4,8 +4,8 @@
 # module, ie:
 # from function import function
 
-from calculateEllipseXY import calculateEllipseXY
-from plotLines import plotLines
-from ImagePlot import ImagePlot
-from LinePlot import LinePlot
-from plot_coordinate_frame import *
+from PylabUtils.plotting.calculateEllipseXY import calculateEllipseXY
+from PylabUtils.plotting.plotLines import plotLines
+from PylabUtils.plotting.ImagePlot import ImagePlot
+from PylabUtils.plotting.LinePlot import LinePlot
+from PylabUtils.plotting.plot_coordinate_frame import *

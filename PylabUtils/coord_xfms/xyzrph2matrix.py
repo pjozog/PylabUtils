@@ -1,5 +1,3 @@
-from pylab import *
-
 from rph2quat import rph2quat
 from xyzquat2matrix import xyzquat2matrix
 import dofs

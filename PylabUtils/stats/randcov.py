@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
-from pylab import *
+import pylab
 
 def randcov (n):
+    """
+    
+    Generates a random, but valid, covariance matrix (size nxn)
 
-    L = randn (n, n)
-    D = eye (n)
-    return L.transpose ().dot (D).dot (L)
+    """
+    L = pylab.randn (n, n)
+    D = pylab.eye (n)
+    return L.T.dot (D).dot (L)

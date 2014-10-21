@@ -1,4 +1,4 @@
-from pylab import *
+import numpy
 
 from .. import dm
 
@@ -15,4 +15,4 @@ def to5dof (xij):
     """
 
     aem = dm.trans2dm (xij[dofs.X], xij[dofs.Y], xij[dofs.Z])
-    return concatenate ((aem[0:2], rph (xij)))
+    return numpy.concatenate ((aem[0:2], rph (xij)))

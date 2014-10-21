@@ -1,16 +1,16 @@
 # Add subdirectories should be imported as sub-modules
 
-import image_processing
-import stats
-import plotting
-import coord_xfms
-import diff
-import spherical_coords
-import misc
-import plane3d
-import dm
-import lcm_utils
-import cv
-import isam_utils
-import ml
-import ut
+from . import image_processing
+from . import stats
+from . import plotting
+from . import coord_xfms
+from . import diff
+from . import spherical_coords
+from . import misc
+from . import plane3d
+from . import dm
+from . import lcm_utils
+from . import cv
+from . import isam_utils
+from . import ml
+from . import ut

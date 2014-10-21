@@ -1,4 +1,4 @@
-from pylab import *
+import numpy as np
 
 def dm2trans (a, e, m):
     """
@@ -11,8 +11,8 @@ def dm2trans (a, e, m):
     
     """
 
-    tz = m*sin (e)
-    tx = m*cos (e)*cos (a)
-    ty = m*cos (e)*sin (a)
+    tz = m*np.sin (e)
+    tx = m*np.cos (e)*np.cos (a)
+    ty = m*np.cos (e)*np.sin (a)
 
-    return array([tx, ty, tz])
+    return np.array([tx, ty, tz])

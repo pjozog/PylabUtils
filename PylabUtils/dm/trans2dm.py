@@ -1,6 +1,6 @@
-from pylab import *
-
 from .. import misc
+
+import numpy as np
 
 def trans2dm (x, y, z):
     """
@@ -13,8 +13,8 @@ def trans2dm (x, y, z):
     
     """
 
-    a = arctan2 (y, x)
-    e = arctan2 (z, sqrt (x**2 + y**2))
-    m = misc.normCols (array ([x, y, z]))
+    a = np.arctan2 (y, x)
+    e = np.arctan2 (z, np.sqrt (x**2 + y**2))
+    m = misc.normCols (np.array ([x, y, z]))
 
-    return array([a, e, m])
+    return np.array([a, e, m])

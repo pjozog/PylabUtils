@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-from pylab import *
+import numpy
 
 def rotx (r):
     """
@@ -9,13 +9,13 @@ def rotx (r):
     
     """
 
-    c = cos (r)
-    s = sin (r)
+    c = numpy.cos (r)
+    s = numpy.sin (r)
 
-    I = ones (c.shape)
-    O = zeros (c.shape)
+    I = numpy.ones (c.shape)
+    O = numpy.zeros (c.shape)
 
-    C_x_r = array ([[I,   O,  O],
-                    [O,   c,  s],
-                    [O,  -s,  c]])
+    C_x_r = numpy.array ([[I,   O,  O],
+                          [O,   c,  s],
+                          [O,  -s,  c]])
     return C_x_r

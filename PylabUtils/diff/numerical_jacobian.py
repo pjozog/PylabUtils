@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-from pylab import *
+import numpy as np
 
 def numerical_jacobian (fhandle, x, **args):
     """
@@ -20,7 +20,7 @@ def numerical_jacobian (fhandle, x, **args):
     
     y = fhandle (x, **args)
     numRows, numCols = (len (y), len (x))
-    J = zeros ((numRows, numCols))
+    J = np.zeros ((numRows, numCols))
 
     for col in range (0, numCols):
         xPrime = x.copy ()

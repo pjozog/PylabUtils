@@ -1,5 +1,3 @@
-from pylab import *
-
 import dofs
 
 def rph (pose):

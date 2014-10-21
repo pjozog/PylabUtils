@@ -14,19 +14,14 @@ def ominus (plane, pose):
     vehicle's frame """
 
     planeXyz = plane.asArray ()
-    d = norm (planeXyz)
-    planeXyzUnit = planeXyz / d
     R = coord_xfms.rotxyz (pose[coord_xfms.dofs.ROLL], pose[coord_xfms.dofs.PITCH], pose[coord_xfms.dofs.HEADING])
     R = R.transpose ()
     t = pose[coord_xfms.dofs.X:coord_xfms.dofs.ROLL]
 
-    nPoseFrame = R.dot (planeXyzUnit)
-    dPoseFrame = planeXyzUnit.dot (t) + d
-    nPoseFrame *= dPoseFrame
-    outPlane = Plane3d.Plane3d (nPoseFrame[0], nPoseFrame[1], nPoseFrame[2])
-
-    return outPlane
-
+    normsq = planeXyz.dot (planeXyz)
+    tmp = ((t.dot (planeXyz) + normsq) * R.dot (planeXyz)) / normsq
+    return Plane3d.Plane3d (tmp[0], tmp[1], tmp[2])
+    
 def oplus (plane, pose):
     """ given a global vehicle pose and local plane measurement in that vehicle's frame,
     predict the plane the global frame """

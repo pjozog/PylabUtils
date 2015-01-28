@@ -1,4 +1,5 @@
 import pylab as pl
+import numpy as np
 from .. import coord_xfms
 from .. import plane3d
 from . import homogeneous
@@ -42,14 +43,10 @@ class Camera:
 
     # lam ("lambda") is inverse depth, in meters
     def raytrace (self, uv, lam=1):
-        npts = 1
-        if len (uv.shape) == 2:
-            npts = uv.shape[1]
-        invPx = self.pinvP.dot (homogeneous.homogenize (uv))
-        if npts == 1:
-            XLambda = invPx + lam*homogeneous.homogenize (self.C)
-        else:
-            XLambda = invPx + pl.tile (lam*homogeneous.homogenize (self.C), (npts, 1)).T
+        uvMat = np.atleast_2d (uv).T
+        npts = uvMat.shape[1]
+        invPx = self.pinvP.dot (homogeneous.homogenize (uvMat))
+        XLambda = invPx + pl.tile (lam*homogeneous.homogenize (self.C), (npts, 1)).T
         return homogeneous.dehomogenize (XLambda)
 
     def normalize (self, uv):

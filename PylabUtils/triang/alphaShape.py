@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from scipy.spatial import Delaunay
 from circumradius import circumradius
 
 def alphaShape (tri, alpha, removeNeighbors=True):

@@ -12,7 +12,7 @@ def f (x, **kwargs):
 
 sigmaPoints, meanWeight, covWeight = plu.ut.unscented_transform (mu, Sigma)
 
-muPrime, SigmaPrime = plu.ut.unscented_func (f, sigmaPoints, meanWeight, covWeight)
+muPrime, SigmaPrime = plu.ut.unscented_func (f, sigmaPoints, meanWeight, covWeight, angleMask=np.array([False, False, True]))
 
 print SigmaPrime
 

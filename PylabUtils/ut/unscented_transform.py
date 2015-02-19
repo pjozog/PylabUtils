@@ -3,6 +3,9 @@
 import scipy.linalg
 
 from numpy import zeros, real, sum, outer
+from .. import misc
+
+minimizedAngle = misc.minimizedAngle
 
 def unscented_transform (mu, Sigma, alpha=1, kappa=0, beta=2):
     n = len (mu)
@@ -30,7 +33,7 @@ def unscented_transform (mu, Sigma, alpha=1, kappa=0, beta=2):
 
     return (sigmaPoints, meanWeight, covWeight)
 
-def unscented_func (f, sigmaPoints, meanWeight, covWeight, **kwargs):
+def unscented_func (f, sigmaPoints, meanWeight, covWeight, angleMask=None, **kwargs):
     n = sigmaPoints.shape[1]
 
     y = f (sigmaPoints[:,0], **kwargs)
@@ -41,10 +44,17 @@ def unscented_func (f, sigmaPoints, meanWeight, covWeight, **kwargs):
     for i in range (n):
         y[:,i] = f (sigmaPoints[:,i], **kwargs)
 
-    muPrime = sum (y * meanWeight, axis=1)
+    if angleMask is None:
+        muPrime = sum (y * meanWeight, axis=1)
+    else:
+        muPrime = minimizedAngle (sum (y * meanWeight, axis=1), angleMask)
 
     SigmaPrime = zeros ((m, m))
     for i in range (n):
-        SigmaPrime += covWeight[i] * outer (y[:,i] - muPrime, (y[:,i] - muPrime))
+        if angleMask is None:
+            SigmaPrime += covWeight[i] * outer (y[:,i] - muPrime, (y[:,i] - muPrime))
+        else:
+            SigmaPrime += covWeight[i] * outer (minimizedAngle (y[:,i] - muPrime, angleMask), 
+                                                minimizedAngle (y[:,i] - muPrime, angleMask))
 
     return muPrime, SigmaPrime

@@ -11,6 +11,7 @@ def border (tri, inds=None):
     """
     edgeX = []
     edgeY = []
+    borderInds = []
 
     if inds is None:
         inds = range (tri.simplices.shape[0])
@@ -24,4 +25,5 @@ def border (tri, inds=None):
                 outsideEdgeInds = np.delete (triangInds, pointIndOppositeOutsideEdge)
                 edgeX.append (tri.points[outsideEdgeInds, :][:,0])
                 edgeY.append (tri.points[outsideEdgeInds, :][:,1])
-    return (edgeX, edgeY)
+                borderInds.append (outsideEdgeInds)
+    return (edgeX, edgeY, np.array (borderInds))

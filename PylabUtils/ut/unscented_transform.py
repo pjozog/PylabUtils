@@ -6,6 +6,7 @@ from numpy import zeros, real, sum, outer
 from .. import misc
 
 minimizedAngle = misc.minimizedAngle
+circularMean = misc.circularMean
 
 def unscented_transform (mu, Sigma, alpha=1, kappa=0, beta=2):
     n = len (mu)
@@ -44,10 +45,12 @@ def unscented_func (f, sigmaPoints, meanWeight, covWeight, angleMask=None, **kwa
     for i in range (n):
         y[:,i] = f (sigmaPoints[:,i], **kwargs)
 
-    if angleMask is None:
-        muPrime = sum (y * meanWeight, axis=1)
-    else:
-        muPrime = minimizedAngle (sum (y * meanWeight, axis=1), angleMask)
+    muPrime = sum (y * meanWeight, axis=1)
+    if angleMask is not None:
+        for i, mask in enumerate (angleMask):
+            if mask:
+                muPrime[i] = circularMean (y[i,:], weights=meanWeight)
+                muPrime[i] = minimizedAngle (muPrime[i])
 
     SigmaPrime = zeros ((m, m))
     for i in range (n):
@@ -58,3 +61,34 @@ def unscented_func (f, sigmaPoints, meanWeight, covWeight, angleMask=None, **kwa
                                                 minimizedAngle (y[:,i] - muPrime, angleMask))
 
     return muPrime, SigmaPrime
+
+def unscented_obs_model (f, sigmaPoints, meanWeight, covWeight, state, stateAngleMask, obsModelAngleMask, **kwargs):
+    n = sigmaPoints.shape[1]
+    stateLen = len (state)
+
+    y = f (sigmaPoints[0:stateLen,0], **kwargs) + sigmaPoints[stateLen:,0]
+    m = len (y)
+
+    y = zeros ((m, n))
+
+    for i in range (n):
+        y[:,i] = f (sigmaPoints[0:stateLen,i], **kwargs) + sigmaPoints[stateLen:,i]
+
+    muPrime = sum (y * meanWeight, axis=1)
+    for i, mask in enumerate (obsModelAngleMask):
+        if mask:
+            muPrime[i] = circularMean (y[i,:], weights=meanWeight)
+            muPrime[i] = minimizedAngle (muPrime[i])
+
+    SigmaPrime = zeros ((m, m))
+    for i in range (n):
+        SigmaPrime += covWeight[i] * outer (minimizedAngle (y[:,i] - muPrime, obsModelAngleMask), 
+                                            minimizedAngle (y[:,i] - muPrime, obsModelAngleMask))
+
+    crossCov = zeros ((stateLen, m))
+    for i in range (n):
+        diffState = minimizedAngle (sigmaPoints[0:stateLen,i] - state, stateAngleMask)
+        diffMeas = minimizedAngle (y[:,i] - muPrime, obsModelAngleMask)
+        crossCov += covWeight[i] * outer (diffState, diffMeas)
+
+    return muPrime, SigmaPrime, crossCov

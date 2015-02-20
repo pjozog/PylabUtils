@@ -1,2 +1,3 @@
 from PylabUtils.ut.unscented_transform import unscented_transform
 from PylabUtils.ut.unscented_transform import unscented_func
+from PylabUtils.ut.unscented_transform import unscented_obs_model

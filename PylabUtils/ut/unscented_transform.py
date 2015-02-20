@@ -13,7 +13,7 @@ def unscented_transform (mu, Sigma, alpha=1, kappa=0, beta=2):
     lam = alpha**2 * (n+kappa) - n
     sigmaPoints = zeros (n,)
     
-    U = real (scipy.linalg.sqrtm ((n+lam) * Sigma))
+    U = real (scipy.linalg.cholesky ((n+lam) * Sigma)).T
     meanWeight = zeros (2*n+1,)
     covWeight = zeros (2*n+1,)
     sigmaPoints = zeros ((n, 2*n+1))

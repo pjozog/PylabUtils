@@ -10,10 +10,17 @@ def minimizedAngle (angle, angleMask=None):
             return numpy.mod (angle - numpy.pi, -2*numpy.pi) + numpy.pi
     else:
         assert (angle.shape == angleMask.shape)
-        angle2 = angle.copy ()
-        for i, mask in enumerate (angleMask):
-            if mask:
-                angle2[i] = minimizedAngle (angle[i], None)
-            else:
-                angle2[i] = angle[i]
-        return angle2
+
+        vals = angle.copy ()
+        indsPositive = numpy.logical_and (angleMask, vals >= 0)
+        indsNegative = numpy.logical_and (angleMask, vals < 0)
+
+        valsPositive = vals[indsPositive]
+        valsPositive = numpy.mod (valsPositive + numpy.pi, 2*numpy.pi) - numpy.pi
+
+        valsNegative = vals[indsNegative]
+        valsNegative = numpy.mod (valsNegative - numpy.pi, -2*numpy.pi) + numpy.pi
+        
+        vals[indsPositive] = valsPositive
+        vals[indsNegative] = valsNegative
+        return vals

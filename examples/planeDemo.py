@@ -109,3 +109,5 @@ mu = mean (grid, 1)
 U, S, Vt = svd (grid - tile (mu, (4, 1)).T, full_matrices=False)
 n = U[:,2]
 mayavi.mlab.quiver3d (mu[0], mu[1], mu[2], n[0], n[1], n[2])
+
+mayavi.mlab.show ()

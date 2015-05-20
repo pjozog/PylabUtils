@@ -81,3 +81,26 @@ class Camera:
         H = coord_xfms.xyzrph2matrix (x_wnew)
         X = homogeneous.dehomogenize (H.dot (homogeneous.homogenize (Xnew)))
         return X
+
+# taken from zhang's Camera Calibration, Chapter 1
+def cameraFromProjectionMat (P):
+    B = P[0:3,0:3]
+    b = P[:,3]
+    BBT = B.dot (B.T)
+    scale = 1. / BBT[2,2]
+    BBT *= scale
+    cx = BBT[0,2]
+    cy = BBT[1,2]
+    fy = np.sqrt (BBT[1,1] - cy**2)
+    gamma = (BBT[0,1] - cx*cy) / fy
+    fx = np.sqrt (BBT[0,0] - cx**2 - gamma**2)
+
+    K = np.array ([[fx, gamma, cx],[0, fy, cy],[0, 0, 1.]])
+    R = np.linalg.inv (K).dot (B)
+    t = np.linalg.inv (K).dot (b)
+
+    rph = coord_xfms.rot2rph (R)
+    pose_ = np.concatenate ((t, rph))
+    pose = coord_xfms.ssc.inverse (pose_)
+
+    return Camera (pose, K)

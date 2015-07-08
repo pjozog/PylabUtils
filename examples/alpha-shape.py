@@ -23,7 +23,7 @@ pylab.triplot(points[:,0], points[:,1], tri.simplices[alphaInds, :].copy())
 pylab.plot(points[:,0], points[:,1], 'o')
 
 # compute and show the border ("concave hull")
-(edgeX, edgeY) = plu.triang.border (tri, inds=alphaInds)
+(edgeX, edgeY, borderInds) = plu.triang.border (tri, inds=alphaInds)
 pylab.figure ()
 pylab.scatter (points[:,0], points[:,1])
 plu.plotting.plotLines (edgeX, edgeY, 'r')

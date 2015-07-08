@@ -43,7 +43,9 @@ class Camera:
 
     # lam ("lambda") is inverse depth, in meters
     def raytrace (self, uv, lam=1):
-        uvMat = np.atleast_2d (uv).T
+        uvMat = np.atleast_2d (uv)
+        if uvMat.shape[0] == 1:
+            uvMat = uvMat.T
         npts = uvMat.shape[1]
         invPx = self.pinvP.dot (homogeneous.homogenize (uvMat))
         XLambda = invPx + pl.tile (lam*homogeneous.homogenize (self.C), (npts, 1)).T

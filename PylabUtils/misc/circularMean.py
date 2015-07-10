@@ -4,8 +4,9 @@ import numpy
 
 def circularMean (samples, weights=None):
     if weights is None:
-        sinSum = sum (numpy.sin (samples))
-        cosSum = sum (numpy.cos (samples))
+        N = len (samples)
+        sinSum = 1.0/N * sum (numpy.sin (samples))
+        cosSum = 1.0/N * sum (numpy.cos (samples))
     else:
         sinSum = sum (weights * numpy.sin (samples))
         cosSum = sum (weights * numpy.cos (samples))

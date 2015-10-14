@@ -52,35 +52,32 @@ class Camera:
     def normalize (self, uv):
         return homogeneous.dehomogenize (self.invK.dot (homogeneous.homogenize (uv)))
 
-    def backprojectOnPlane (self, uv, plane):
-        # rotate the plane so that it's the ground plane (0, 0, 1)
-        groundPlane = plane3d.Plane3d (0, 0, 1)
-        RPlaneToGround = plane.rot (groundPlane)
-        rph = coord_xfms.rot2rph (RPlaneToGround.T)
+    # plane_c is plane expressed in camera frame
+    def backprojectOnPlane (self, uv, plane_c):
+        # get a point on the plane
+        plane_w = plane_c.oplus (self.x_wc)
+        p0 = self.x_wc[0:3] - plane_w.asArray ()
+        l0 = self.x_wc[0:3]
 
-        # "x_cnew" : "Transformation from camera frame to new frame"
-        x_cnew = pl.array ([-plane.x, -plane.y, -plane.z, rph[0], rph[1], rph[2]])
-        # "x_wnew" : "Transformation from world frame to new frame"
-        x_wnew = coord_xfms.ssc.head2tail (self.x_wc, x_cnew)
-        # "x_newc" : "Transformation from new frame to camera frame"
-        x_newc = coord_xfms.ssc.inverse (x_cnew)
+        # these are in the camera frame, we want the world frame
+        l_end_cam = self.invK.dot (homogeneous.homogenize (uv))
+        l_end = homogeneous.dehomogenize (self.cHw.dot (homogeneous.homogenize (l_end_cam)))
+        l_start = l0
 
-        # camera in shifted reference frame
-        camnew = Camera (x_newc, self.K)
+        # subtract l_start to every column in l_end
+        l = (l_end.T - l_start).T
 
-        # we know if we back-projected the 2D pixel point to 3D space in this new reference frame,
-        # it will have z coordinate of zero.  Therefore, discard the third column of camera
-        # projection matrix P
-        Preduced = camnew.P[:,[0, 1, 3]]
+        # use the formula from wikipedia
+        n = plane_w.asArray ()
+        n = n / np.linalg.norm (n)
 
-        # now we can recover the X Y (and Z, since it's zero) of the 3D point in rotated reference frame
-        backproj = homogeneous.dehomogenize (pl.inv (Preduced).dot (homogeneous.homogenize (uv)))
-        Xnew = pl.row_stack ((backproj[0], backproj[1], pl.zeros (backproj[0].shape)))
+        d = ((p0.T - l0).T.dot (n)) / (l.T.dot (n))
 
-        # transform back to original reference frame
-        H = coord_xfms.xyzrph2matrix (x_wnew)
-        X = homogeneous.dehomogenize (H.dot (homogeneous.homogenize (Xnew)))
-        return X
+        # scale every column in l by the corresponding element of d
+        tmp = l * d[None,:]
+
+        # add l0 to every column in tmp (these are the intersections)
+        return (tmp.T + l0).T
 
 # taken from zhang's Camera Calibration, Chapter 1
 def cameraFromProjectionMat (P):

@@ -1,4 +1,5 @@
 import numpy
+from numpy import concatenate
 
 from xyzrph2matrix import xyzrph2matrix
 from matrix2xyzrph import matrix2xyzrph

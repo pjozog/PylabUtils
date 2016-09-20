@@ -8,10 +8,10 @@ import scipy.stats
 
 import PylabUtils as plu
 
-# corners of box (2x2x2m cube, kinda like a sedan)
-# WIDTH = 2                         # x
-# HEIGHT =    2                     # y
-# DEPTH = 2                         # z
+# corners of box (typical STOP sign)
+# WIDTH = 0.4572                    # x
+# HEIGHT = 0.4572                   # y
+# DEPTH = 0.01                      # z
 
 # corners of lane marker box
 WIDTH = 0.10                    # x
@@ -89,36 +89,32 @@ class Self:
 
         self.face_of_interest = face_indeces
 
-    def overlap(self, x, **kwargs):
-        x_gc_noisy = np.copy(kwargs['x_gc_true'])
-        x_gc_noisy[0] = x[0]
-        x_gc_noisy[1] = x[1]
-        x_gc_noisy[2] = x[2]
-        x_gc_noisy[3] = x[3]
-        x_gc_noisy[4] = x[4]
-        x_gc_noisy[5] = x[5]
-
-        x_gc_true = kwargs['x_gc_true']
-        K = kwargs['K']
-
-        camera_noisy = plu.cv.Camera(x_gc_noisy, K)
-        camera_true = plu.cv.Camera(x_gc_true, K)
-
-        corners = kwargs['corners']
-        corners_global = plu.cv.homogeneous.dehomogenize(plu.coord_xfms.xyzrph2matrix(self.x_gbox).dot(plu.cv.homogeneous.homogenize(self.corners)))
-
-        corners_uv_noisy = camera_noisy.project(corners_global)
-        corners_uv_true = camera_true.project(corners_global)
-
-        region_noisy = polygon.Polygon(corners_uv_noisy[:,self.face_of_interest].T)
-        region_true = polygon.Polygon(corners_uv_true[:,self.face_of_interest].T)
+    def overlap_score(self, points_a, points_b):
+        region_noisy = polygon.Polygon(points_a)
+        region_true = polygon.Polygon(points_b)
 
         common_area = region_noisy.intersection(region_true).area
         combined_area = region_noisy.union(region_true).area
 
         percent_overlap = 100*(1. - ((region_true.area - common_area) / region_true.area))
 
-        return np.array([percent_overlap])
+        return np.array([percent_overlap, np.mean(np.linalg.norm(points_a - points_b, axis=1))])
+
+    def overlap(self, x):
+        x_gc_noisy = np.copy(x)
+        x_gc_true = self.x_gc
+
+        camera_noisy = plu.cv.Camera(x_gc_noisy, self.K)
+        camera_true = plu.cv.Camera(x_gc_true, self.K)
+
+        corners_global = plu.cv.homogeneous.dehomogenize(
+            plu.coord_xfms.xyzrph2matrix(self.x_gbox).dot(plu.cv.homogeneous.homogenize(self.corners)))
+
+        corners_uv_noisy = camera_noisy.project(corners_global)
+        corners_uv_true = camera_true.project(corners_global)
+
+        return self.overlap_score(corners_uv_noisy[:,self.face_of_interest].T,
+                                  corners_uv_true[:,self.face_of_interest].T)[0]
 
     def run_monte_carlo(self, event):
         self.x_gc[0] = self.slider_x_gc_x.val
@@ -138,13 +134,12 @@ class Self:
         Sigma[4,4] = (self.slider_std_p.val * np.pi/180)**2
         Sigma[5,5] = (self.slider_std_h.val * np.pi/180)**2
 
-        args = {'K' : self.K, 'x_gc_true' : self.x_gc, 'corners' : self.corners}
         N = 3000
         samps_in = plu.stats.mvnrnd(self.x_gc, Sigma, N)
         samps = np.zeros(N,)
         for i in range(N):
             samp_in = samps_in[:,i]
-            samps[i] = self.overlap(samp_in, **args)
+            samps[i] = self.overlap(samp_in)
 
         muPrimeMc = np.mean(samps)
         SigmaPrimeMc = np.var(samps)
@@ -168,9 +163,8 @@ class Self:
         self.x_gc[5] = self.slider_x_gc_h.val * np.pi/180
         camera = plu.cv.Camera(self.x_gc, self.K)
 
-        args = {'K' : self.K, 'x_gc_true' : self.x_gc, 'corners' : self.corners}
-
-        corners_global = plu.cv.homogeneous.dehomogenize(plu.coord_xfms.xyzrph2matrix(self.x_gbox).dot(plu.cv.homogeneous.homogenize(self.corners)))
+        corners_global = plu.cv.homogeneous.dehomogenize(
+            plu.coord_xfms.xyzrph2matrix(self.x_gbox).dot(plu.cv.homogeneous.homogenize(self.corners)))
 
         corners_uv = camera.project(corners_global)
 
@@ -183,18 +177,18 @@ class Self:
         self.ax.set_xlabel('Width (pixels)')
         self.ax.grid('on')
 
-        self.ax.plot(corners_uv[0,[0,1]], corners_uv[1,[0,1]], 'r', linewidth=3)
-        self.ax.plot(corners_uv[0,[1,5]], corners_uv[1,[1,5]], 'r', linewidth=3)
-        self.ax.plot(corners_uv[0,[5,4]], corners_uv[1,[5,4]], 'r', linewidth=3)
-        self.ax.plot(corners_uv[0,[4,0]], corners_uv[1,[4,0]], 'r', linewidth=3)
+        self.ax.plot(corners_uv[0,[0,1]], corners_uv[1,[0,1]], 'k', linewidth=3)
+        self.ax.plot(corners_uv[0,[1,5]], corners_uv[1,[1,5]], 'k', linewidth=3)
+        self.ax.plot(corners_uv[0,[5,4]], corners_uv[1,[5,4]], 'k', linewidth=3)
+        self.ax.plot(corners_uv[0,[4,0]], corners_uv[1,[4,0]], 'k', linewidth=3)
 
-        self.ax.plot(corners_uv[0,[0,2]], corners_uv[1,[0,2]], 'g', linewidth=3)
-        self.ax.plot(corners_uv[0,[2,3]], corners_uv[1,[2,3]], 'g', linewidth=3)
-        self.ax.plot(corners_uv[0,[3,1]], corners_uv[1,[3,1]], 'g', linewidth=3)
+        self.ax.plot(corners_uv[0,[0,2]], corners_uv[1,[0,2]], 'k', linewidth=3)
+        self.ax.plot(corners_uv[0,[2,3]], corners_uv[1,[2,3]], 'k', linewidth=3)
+        self.ax.plot(corners_uv[0,[3,1]], corners_uv[1,[3,1]], 'k', linewidth=3)
 
-        self.ax.plot(corners_uv[0,[3,7]], corners_uv[1,[3,7]], 'b', linewidth=3)
-        self.ax.plot(corners_uv[0,[7,6]], corners_uv[1,[7,6]], 'b', linewidth=3)
-        self.ax.plot(corners_uv[0,[6,2]], corners_uv[1,[6,2]], 'b', linewidth=3)
+        self.ax.plot(corners_uv[0,[3,7]], corners_uv[1,[3,7]], 'k', linewidth=3)
+        self.ax.plot(corners_uv[0,[7,6]], corners_uv[1,[7,6]], 'k', linewidth=3)
+        self.ax.plot(corners_uv[0,[6,2]], corners_uv[1,[6,2]], 'k', linewidth=3)
 
         self.ax.plot(corners_uv[0,[7,5]], corners_uv[1,[7,5]], 'k', linewidth=3)
         self.ax.plot(corners_uv[0,[4,6]], corners_uv[1,[4,6]], 'k', linewidth=3)
@@ -202,7 +196,8 @@ class Self:
         self.ax.plot([0, 0, self.CAM_WIDTH, self.CAM_WIDTH, 0], [0, self.CAM_HEIGHT, self.CAM_HEIGHT, 0, 0], 'k')
 
         if self.set_corners is not None:
-            self.ax.plot(self.set_corners[0,:], self.set_corners[1,:], 'k', linewidth=3)
+            self.ax.plot(self.set_corners[0,:], self.set_corners[1,:], 'r', linewidth=3)
+            self.ax.set_title('Overlap: %f' % self.overlap_score(corners_uv[:,self.face_of_interest].T, self.set_corners.T)[0])
 
         self.fig.canvas.draw()
 
@@ -219,7 +214,8 @@ class Self:
 
         args = {'K' : self.K, 'x_gc_true' : self.x_gc, 'corners' : self.corners}
 
-        corners_global = plu.cv.homogeneous.dehomogenize(plu.coord_xfms.xyzrph2matrix(self.x_gbox).dot(plu.cv.homogeneous.homogenize(self.corners)))
+        corners_global = plu.cv.homogeneous.dehomogenize(
+            plu.coord_xfms.xyzrph2matrix(self.x_gbox).dot(plu.cv.homogeneous.homogenize(self.corners)))
 
         corners_uv = camera.project(corners_global)
         self.set_corners = corners_uv[:,self.face_of_interest]
@@ -245,7 +241,58 @@ class Self:
         self.slider_std_h.on_changed(self.update)
 
         self.update()
-        plt.show()
+
+    def compute_gradient_table(self):
+        dists = [2., 5., 10., 15.]                # meters
+
+        eye6 = np.eye(6)
+        x_basis = eye6[:,0]
+        y_basis = eye6[:,1]
+        z_basis = eye6[:,2]
+        r_basis = eye6[:,3]
+        p_basis = eye6[:,4]
+        h_basis = eye6[:,5]
+
+        num_perts = 3 * 4 + 3 * 3
+
+        perts = []
+        for basis in [x_basis, y_basis, z_basis]:
+            perts.append(basis * 0.01)
+            perts.append(basis * 0.03)
+            perts.append(basis * 0.10)
+            perts.append(basis * 0.30)
+        for basis in [r_basis, p_basis, h_basis]:
+            perts.append(basis * 0.10 * np.pi/180.)
+            perts.append(basis * 0.30 * np.pi/180.)
+            perts.append(basis * 1.00 * np.pi/180.)
+            perts.append(basis * 3.00 * np.pi/180.)
+
+        for shape in ['Signs', 'Lane Dash']:
+            for dist in [3.0, 5.0, 10., 20.]:
+                for pert in perts:
+                    self.x_gc[2] = 50. - dist
+                    camera = plu.cv.Camera(self.x_gc, self.K)
+                    args = {'K' : self.K, 'x_gc_true' : self.x_gc, 'corners' : self.corners}
+
+                    corners_global = plu.cv.homogeneous.dehomogenize(
+                        plu.coord_xfms.xyzrph2matrix(self.x_gbox).dot(plu.cv.homogeneous.homogenize(self.corners)))
+
+                    corners_uv = camera.project(corners_global)
+                    self.set_corners = corners_uv[:,self.face_of_interest]
+
+                    x_gc_pert = self.x_gc + pert
+                    camera_pert = plu.cv.Camera(x_gc_pert, self.K)
+
+                    corners_global = plu.cv.homogeneous.dehomogenize(
+                        plu.coord_xfms.xyzrph2matrix(self.x_gbox).dot(plu.cv.homogeneous.homogenize(self.corners)))
+
+                    corners_uv = camera_pert.project(corners_global)
+
+                    print '%f, %f, %f, %f, %f, %f, %f, %f, %f' % (dist, pert[0], pert[1], pert[2], pert[3], pert[4], pert[5],
+                                                                  self.overlap_score(corners_uv[:,self.face_of_interest].T, self.set_corners.T)[1],
+                                                                  self.overlap_score(corners_uv[:,self.face_of_interest].T, self.set_corners.T)[0])
 
 s = Self(WIDTH, HEIGHT, DEPTH, TOP_FACE)
 s.run()
+# s.compute_gradient_table()
+plt.show()

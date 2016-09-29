@@ -61,7 +61,6 @@ if __name__ == '__main__':
     maxsecs = 10                # number of seconds to execute, changeable
     N = int(maxsecs / dt)       # number of discrete steps to compute
     for i in range(N):
-
         Sigma = np.zeros((6,6))
         Sigma[0:2,0:2] = Sigma_[0:2,0:2]
         Sigma[5,5] = Sigma_[2,2]
@@ -85,12 +84,14 @@ if __name__ == '__main__':
 
         x_gi_2d = np.array([x_gi[0], x_gi[1], x_gi[2]])
 
-        xcov, ycov = plu.plotting.calculateEllipseXY(x_gi[0:2], x_gi_cov[0:2,0:2], 9)
+        xcov, ycov = plu.plotting.calculateEllipseXY(x_gi[0:2], x_gi_cov[0:2,0:2], 9, 100)
         plot(xcov, ycov)
         plot(x_gi[0], x_gi[1], 'x')
         axis('equal')
         grid('on')
-        plt.pause(0.01)
+        gca().set_ylim([-2, 2])
+        gca().set_xlim([-2, 2])
+        plt.pause(0.0001)
 
 plt.pause(0)
 show()

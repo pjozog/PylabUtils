@@ -8,12 +8,13 @@ mu = 2*ones (3,)
 Sigma = .2 * eye (3)
 
 def f (x, **kwargs):
-    return array ([x[0]**1, x[1]**2, x[2]**3])
+    return array ([x[0]**1, x[1]**2, x[2]**3, arctan2(x[2], x[1])])
 
 sigmaPoints, meanWeight, covWeight = plu.ut.unscented_transform (mu, Sigma)
 
-muPrime, SigmaPrime = plu.ut.unscented_func (f, sigmaPoints, meanWeight, covWeight, angleMask=np.array([False, False, True]))
+muPrime, SigmaPrime = plu.ut.unscented_func (f, sigmaPoints, meanWeight, covWeight, angleMask=np.array([False, False, True, True]))
 
+print muPrime
 print 'Unscented transform covariance estimate: '
 print SigmaPrime
 
@@ -44,7 +45,7 @@ def observation (state, **kwargs):
 stateAngleMask = np.array ([False, False, True])
 obsModelAngleMask = np.array ([True])
 args = {'xCoord': 21, 'yCoord': 292}
-predObs, predObsCov, crossCov = plu.ut.unscented_obs_model (observation, sigmaPoints, meanWeight, covWeight, 
+predObs, predObsCov, crossCov = plu.ut.unscented_obs_model (observation, sigmaPoints, meanWeight, covWeight,
                                                             XAug[0:3], stateAngleMask, obsModelAngleMask,
                                                             **args)
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import regression
+from . import regression
 
 from pylab import zeros, solve, diag, eye, sqrt
 

@@ -2,14 +2,14 @@ import numpy
 
 from .. import dm
 
-from xyz import xyz
-from rph import rph
-import dofs
+from .xyz import xyz
+from .rph import rph
+from . import dofs
 
 def to5dof (xij):
     """
 
-    Convert a 6-DOF pose xij to a 5-DOF measurement, like 
+    Convert a 6-DOF pose xij to a 5-DOF measurement, like
     what is procuced by a 2-view 3D reconstruction
 
     """

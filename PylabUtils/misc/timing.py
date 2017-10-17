@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import time
-from expecting import expecting
+from .expecting import expecting
 
 TICKS_PER_SECOND = 1e6
 
@@ -15,7 +15,7 @@ class Timer ():
 
     Examples
     --------
-    
+
     >>> t = Timer ()
     >>> time.sleep (0.5)
     >>> print t
@@ -38,13 +38,13 @@ _global_timer = Timer ()
 
 def tic ():
     """
-    
-    Set the start time for the global timer 
+
+    Set the start time for the global timer
     (warning: this function is not thread-safe)
 
     Examples
     --------
-    
+
     >>> tic ()
     >>> time.sleep (0.5)
     >>> toc ()
@@ -54,13 +54,13 @@ def tic ():
 
 def toc ():
     """
-    
-    Stop the global timer 
+
+    Stop the global timer
     (warning: this function is not thread-safe)
 
     Examples
     --------
-    
+
     >>> tic ()
     >>> time.sleep (0.5)
     >>> toc ()
@@ -75,4 +75,4 @@ def toc ():
     if outputCount == 1:
         return _global_timer.get ()
     else:
-        print 'Elapsed time is %f seconds.' % _global_timer.get ()
+        print('Elapsed time is %f seconds.' % _global_timer.get ())

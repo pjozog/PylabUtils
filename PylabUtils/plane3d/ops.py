@@ -2,7 +2,7 @@ from pylab import *
 
 from .. import coord_xfms
 
-import Plane3d
+from . import Plane3d
 
 def rot (plane1, plane2):
     """ returns the rotation matrix that rotates plane1 to plane2"""
@@ -21,7 +21,7 @@ def ominus (plane, pose):
     normsq = planeXyz.dot (planeXyz)
     tmp = ((t.dot (planeXyz) + normsq) * R.dot (planeXyz)) / normsq
     return Plane3d.Plane3d (tmp[0], tmp[1], tmp[2])
-    
+
 def oplus (plane, pose):
     """ given a global vehicle pose and local plane measurement in that vehicle's frame,
     predict the plane the global frame """

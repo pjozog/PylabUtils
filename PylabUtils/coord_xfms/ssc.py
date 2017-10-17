@@ -1,14 +1,14 @@
 import numpy
 from numpy import concatenate
 
-from xyzrph2matrix import xyzrph2matrix
-from matrix2xyzrph import matrix2xyzrph
+from .xyzrph2matrix import xyzrph2matrix
+from .matrix2xyzrph import matrix2xyzrph
 
 from .. import diff
 
 def head2tail (x_ij, x_jk):
     """
-    
+
     Given 6-DOF pose arrays x_ij and x_jk, return x_ik
 
     """
@@ -20,7 +20,7 @@ def head2tail (x_ij, x_jk):
 
 def head2tail_jacob (x_ij, x_jk):
     """
-    
+
     Returns the Jacobian of head2tail
 
     """
@@ -36,7 +36,7 @@ def inverse (x_ij):
     """
 
     Given the 6-DOF pose x_ij, return x_ji
-    
+
     """
 
     Hij = xyzrph2matrix (x_ij)
@@ -54,7 +54,7 @@ def inverse_jacob (x_ij):
     """
 
     Return the Jacobian of inverse
-    
+
     """
     return diff.numerical_jacobian (inverse, x_ij)
 
@@ -62,7 +62,7 @@ def tail2tail (x_gi, x_gj):
     """
 
     Given 6-DOF poses x_gi and x_gj, return x_ij
-    
+
     """
 
     return head2tail (inverse (x_gi), x_gj)
@@ -71,7 +71,7 @@ def tail2tail_jacob (x_gi, x_gj):
     """
 
     Return the Jacobian of tail2tail
-    
+
     """
     x = concatenate ((x_gi, x_gj))
     return diff.numerical_jacobian (_ft2t, x)

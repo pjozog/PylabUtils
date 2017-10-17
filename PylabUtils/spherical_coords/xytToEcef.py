@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from pylab import array, cos, sin, append
-from rotecef import rotecef
+from .rotecef import rotecef
 
 from .. import coord_xfms
 
@@ -20,5 +20,5 @@ def xytToEcef (lat, long, height, bearing, radius):
     pose = array([])
     pose = append (pose, array ([x, y, z]))
     pose = append (pose, rph)
-    
+
     return pose

@@ -1,4 +1,4 @@
-import dofs
+from . import dofs
 
 import numpy
 

@@ -28,7 +28,7 @@ class Ackermann():
 
 # Shows how to scale time to maintain same distribution with varying timesteps
 if __name__ == '__main__':
-    dt = 0.1                   # time between sensor readings, e.g., changeable
+    dt = 1                   # time between sensor readings, e.g., changeable
     a = Ackermann(dt)
     ackermannSigma = eye(3)
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     mu, Sigma_ = plu.ut.unscented_func(a.x_i_iplus1, sigmaPoints, meanWeight,
                                        covWeight, angleMask=np.array([False, False, True]))
 
-    maxsecs = 10                # number of seconds to execute, changeable
+    maxsecs = 200                # number of seconds to execute, changeable
     N = int(maxsecs / dt)       # number of discrete steps to compute
     for i in range(N):
         Sigma = np.zeros((6,6))
@@ -89,8 +89,8 @@ if __name__ == '__main__':
         plot(x_gi[0], x_gi[1], 'x')
         axis('equal')
         grid('on')
-        gca().set_ylim([-2, 2])
-        gca().set_xlim([-2, 2])
+        # gca().set_ylim([-2, 2])
+        # gca().set_xlim([-2, 2])
         plt.pause(0.0001)
 
 plt.pause(0)

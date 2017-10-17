@@ -1,7 +1,7 @@
 from .. import dm
 
 import numpy as np
-import ops
+from . import ops
 
 class Plane3d (object):
 

@@ -1,10 +1,10 @@
-from rph2quat import rph2quat
-from xyzquat2matrix import xyzquat2matrix
-import dofs
+from .rph2quat import rph2quat
+from .xyzquat2matrix import xyzquat2matrix
+from . import dofs
 
 def xyzrph2matrix (x):
     """
-    
+
     Returns
     -------
     4x4 transformation matrix from x, a 6-DOF pose array

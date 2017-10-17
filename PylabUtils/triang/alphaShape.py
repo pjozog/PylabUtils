@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from circumradius import circumradius
+from .circumradius import circumradius
 
 def alphaShape (tri, alpha, removeNeighbors=True):
     """
-    
+
     Remove triangles in 2D triangulation 'tri' that have a circumradius less than alpha
 
     """
@@ -23,5 +23,5 @@ def alphaShape (tri, alpha, removeNeighbors=True):
             for i, neighbor in enumerate (tri.neighbors[alphaInd, :]):
                 if neighbor not in alphaInds:
                     tri.neighbors[alphaInd,i] = -1
-    
+
     return alphaInds

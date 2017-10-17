@@ -40,14 +40,14 @@ class ImagePlot (object):
         z = self._getZ (col, row)
 
         str = self._getString (x, y, z)
-        print str
+        print(str)
 
     def _formatCoord (self, x, y):
         col, row = x, y
         z = self._getZ (col, row)
         str = self._getString (x, y, z)
         return str
-        
+
     def newAx (self):
         fig = figure ()
         ax = fig.add_subplot (ARRANGEMENT)

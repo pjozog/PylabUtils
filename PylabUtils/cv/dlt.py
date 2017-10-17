@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 import pylab as pl
-from skewsym import skewsym
-import homogeneous
+from .skewsym import skewsym
+from . import homogeneous
 from .. import coord_xfms
 
 def homog2D (xPrime, x):
     """
-    
-    Compute the 3x3 homography matrix mapping a set of N 2D homogeneous 
+
+    Compute the 3x3 homography matrix mapping a set of N 2D homogeneous
     points (3xN) to another set (3xN)
 
     """
@@ -38,11 +38,11 @@ def homog2D (xPrime, x):
 
 def homog3D (points2d, points3d):
     """
-    
+
     Compute a matrix relating homogeneous 3D points (4xN) to homogeneous
     2D points (3xN)
 
-    Not sure why anyone would do this.  Note that the returned transformation 
+    Not sure why anyone would do this.  Note that the returned transformation
     *NOT* an isometry.  But it's here... so deal with it.
 
     """
@@ -77,7 +77,7 @@ def triangulate (points2d, cameras):
 
     points2d: 2N-by-M matrix of 2D image points  (N: number of cameras, M: number of image points)
     cameras: length-N list of Camera objects
-    
+
     """
 
     N = len (cameras)
@@ -104,5 +104,5 @@ def triangulate (points2d, cameras):
         V = VT.T
 
         X[:,pointInd] = homogeneous.dehomogenize (V[:,-1])
-        
+
     return X

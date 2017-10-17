@@ -7,7 +7,7 @@ class LinePlot (object):
     """
 
     Shows the z value when you hover over with mouse, and prints the (x,y,z) value on mouse click
-    
+
     """
     def __init__ (self, xData, yData):
         self.xData = xData
@@ -20,7 +20,7 @@ class LinePlot (object):
 
     def _getY (self, ind):
         y = None
-        
+
         if ind>=0 and ind<self.numelems:
             y = self.yData[ind]
         return y
@@ -39,14 +39,14 @@ class LinePlot (object):
         y = self._getY (ind)
 
         str = self._getString (x, y)
-        print str
+        print(str)
 
     def _formatCoord (self, x, y):
         ind = self._getIndex (x)
         y = self._getY (ind)
         str = self._getString (x, y)
         return str
-        
+
     def newAx (self):
         fig = figure ()
         ax = fig.add_subplot (ARRANGEMENT)
